@@ -4,11 +4,10 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include "constantes.h"
 
 using namespace std;
 
-const int OK = -1;
-const int ER = -2;
 
 class Token{
 public:
@@ -24,7 +23,7 @@ public:
 };
 
 ostream& operator<<(ostream& s, const Token& tok){
-	s<<"< Token"<<tok.tipo<<":\""<<tok.token<<"\">";
+	s<<"< Token = "<<tok.tipo<<":\""<<tok.token<<"\">";
 	return s;
 }
 
@@ -45,13 +44,14 @@ private:
 		int res = idx;
 		if(buff[idx++]=='\n'){
 			contLinea++;
-			contCol = 0;
+			contCol = 1;
 		}
 		contCol++;
 		return res;
 	}
 
 public:
+	bool error;
 	Lex(int grafo[Tam_G][Tam_G], string& b, string (*tipo)(int), int (*clase)(char)){
 		this->G = new int*[Tam_G];
 		for(int i=0;i<Tam_G;i++){
@@ -61,8 +61,13 @@ public:
 		this->tipoToken = tipo;
 		this->clase = clase;
 		this->idx = 0;
-		contCol = 0;
-		contLinea = 0;
+		contCol = 1;
+		contLinea = 1;
+		error = false;
+	}
+
+	~Lex(){
+		delete[] G;
 	}
 
 	void deshacer(int k){
@@ -95,6 +100,7 @@ public:
 		}
 		if(estado==ER){
 			cout<<buff[idx]<<" inesperado en "<<this->contLinea<<":"<<this->contCol<<endl;
+			error = true;
 			return Token();
 		}
 		if(estado == OK) 
@@ -102,6 +108,13 @@ public:
 		if(estado != ER and estado != OK) 
 			estAnt = estado;
 		return Token(lexema, tipoToken(estAnt));
+	}
+
+	int numeroLinea(){
+		return contLinea;
+	}
+	int numeroCaracter(){
+		return contCol;
 	}
 };
 
