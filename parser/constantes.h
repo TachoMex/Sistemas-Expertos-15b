@@ -20,7 +20,10 @@ const std::string TOK_LOGICO = "Logico";
 const std::string TOK_PARENTESIS = "Parentesis";
 const std::string TOK_SEPARADOR = "Separador";
 const std::string TOK_NEGACION = "Negacion";
+const std::string TOK_FIN = "FIN DE CADENA";
+
 const int TAM_G = 21;
+
 int G[TAM_G][TAM_G]{
 	//      00, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19
 	/*00*/ { 1, 4, 5,20,14,13,11,10, 9, 8, 7,17, 6,ER,18,12, 0, 0,19,15},
@@ -40,7 +43,7 @@ int G[TAM_G][TAM_G]{
 	/*14*/ {OK,OK,OK,OK,ER,ER,16,ER,ER,ER,ER,OK,ER,ER,ER,12,OK,OK,ER,ER},
 	/*15*/ {OK,OK,OK,OK,ER,ER,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,ER},
 	/*16*/ {OK,OK,OK,OK,ER,15,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,ER},
-	/*17*/ {OK,OK,OK,OK,ER,ER,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,OK},
+	/*17*/ {OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK,OK},
 	/*18*/ {OK,OK,OK,OK,ER,ER,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,ER},
 	/*19*/ {OK,OK,OK,OK,ER,ER,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,OK},
 	/*20*/ {OK,OK, 3,OK,ER,ER,ER,ER,ER,ER,ER,OK,ER,ER,ER,ER,OK,OK,OK,ER},

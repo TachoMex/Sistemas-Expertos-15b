@@ -40,6 +40,7 @@ private:
 	int contLinea;
 	int contCol;
 
+
 	int incrementaContador(){
 		int res = idx;
 		if(buff[idx++]=='\n'){
@@ -49,6 +50,7 @@ private:
 		contCol++;
 		return res;
 	}
+
 
 public:
 	bool error;
@@ -79,6 +81,12 @@ public:
 	}
 
 	Token siguiente(){
+		if(idx >= buff.size()){
+			return Token("", TOK_FIN);
+		}
+
+
+
 		string lexema="";
 		int estado = 0, estAnt=0;
 		while(buff[idx]==' ' or buff[idx]=='\t' or buff[idx]=='\n'){
@@ -86,6 +94,7 @@ public:
 		}
 		while( idx < buff.size() and estado != ER and estado != OK){
 			char c = buff[idx];
+			//cout<<"::"<<c<<"-->"<<estado;
 			incrementaContador();
 			int t = clase(c);
 			if( t >= 0 and estado != ER and estado != OK){
@@ -97,9 +106,10 @@ public:
 			}else if (t < 0 ){ 
 				estado = ER;
 			}
+			//cout<<"->"<<estado<<endl;
 		}
 		if(estado==ER){
-			cout<<buff[idx]<<" inesperado en "<<this->contLinea<<":"<<this->contCol<<endl;
+			cout<<buff[idx-1]<<" inesperado en "<<this->contLinea<<":"<<this->contCol<<endl;
 			error = true;
 			return Token();
 		}
@@ -107,6 +117,7 @@ public:
 			idx--;
 		if(estado != ER and estado != OK) 
 			estAnt = estado;
+
 		return Token(lexema, tipoToken(estAnt));
 	}
 

@@ -1,6 +1,7 @@
 #include "sintactico.h"
 #include <iostream>
 #include <cctype>
+#include <cstdlib>
 using namespace std;
 
 string CTRL_L=" ";

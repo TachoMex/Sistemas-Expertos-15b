@@ -30,9 +30,8 @@ private:
 	void error(const string&);
 	void leeToken(){
 		siguiente = lex -> siguiente();
-		if(lex->error){
-			this->flagError = true;
-		}
+		flagError = lex -> error;
+	//	cout<<siguiente<<endl;
 	}
 };
 
@@ -40,6 +39,9 @@ template<int TG>
 void Sintax<TG>::analiza(){
 	leeToken();
 	evalTermino();
+	if(siguiente.tipo != TOK_FIN){
+		error("OPERADOR");
+	}
 	if(not flagError){
 		cout<<"Formula bien formada"<<endl;
 	}
@@ -48,6 +50,8 @@ void Sintax<TG>::analiza(){
 
 template<int TG>
 void Sintax<TG>::error(const string& esperado){
+	if(flagError)
+		return;
 	cout<<"Error en "<<lex->numeroLinea()<<":"<<lex->numeroCaracter()<<endl;
 	cout<<"Se esperaba: "<<esperado<<endl;
 	cout<<"Obtenido   : "<<siguiente<<endl;
@@ -59,17 +63,8 @@ void Sintax<TG>::evalTermino(){
 	// cout<<"#Termino: "<<siguiente<<endl;
 	if(flagError)
 		return;
-	if(siguiente.token == "("){
-		leeToken();
-		evalTermino();
-		if(siguiente.token != ")"){
-			error(")");
-		}
-		leeToken();
-	}else {
-		evalLogico();
-	}
-	// cout<<"@Termino: "<<siguiente<<endl;
+	evalLogico();
+		// cout<<"@Termino: "<<siguiente<<endl;
 }
 
 template<int TG>
@@ -77,7 +72,7 @@ void Sintax<TG>::evalSigno(){
 	// cout<<"#Signo: "<<siguiente<<endl;
 	if(flagError)
 		return;
-	if(siguiente.token=="-" or siguiente.token == "+"){
+	if(siguiente.token=="-" or siguiente.token == "+" or siguiente.token == "~"){
 		leeToken();
 	}else if(siguiente.tipo == TOK_ENTERO or siguiente.tipo == TOK_REAL or siguiente.tipo == TOK_VARIABLE){
 		leeToken();
@@ -88,21 +83,22 @@ void Sintax<TG>::evalSigno(){
 		}
 	}else if(siguiente.tipo == TOK_CUANTIFICADOR){
 		evalCuantificador();
-	}else{
-		//error(":v");
+	}else if(siguiente.token == "("){
+		leeToken();
+		evalTermino();
+		if(siguiente.token != ")"){
+			error(")");
+		}
+		leeToken();
+	}else {
+		error("TERMINO");
 	}
 	// cout<<"@Signo: "<<siguiente<<endl;
 }
 
 template<int TG>
 void Sintax<TG>::evalNegacion(){
-	// cout<<"#Negacion: "<<siguiente<<endl;
-	if(flagError)
-		return;
-	if(siguiente.token=="~"){
-		leeToken();
-	}
-	evalTermino();
+	evalSigno();
 }
 
 template<int TG>
@@ -114,12 +110,15 @@ void Sintax<TG>::evalCuantificador(){
 		leeToken();
 		if(siguiente.tipo == TOK_VARIABLE){
 			leeToken();
+
+//			cout<<"#Cuantificador"<<endl;
+//			cout<<siguiente<<endl;
+
 			evalTermino();
 		}else{
 			error("VARIABLE");
 		}
 	}
-	evalTermino();
 	// cout<<"@Cuantificador: "<<siguiente<<endl;
 }
 
