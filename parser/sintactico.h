@@ -74,6 +74,7 @@ void Sintax<TG>::evalSigno(){
 		return;
 	if(siguiente.token=="-" or siguiente.token == "+" or siguiente.token == "~"){
 		leeToken();
+		evalTermino();
 	}else if(siguiente.tipo == TOK_ENTERO or siguiente.tipo == TOK_REAL or siguiente.tipo == TOK_VARIABLE){
 		leeToken();
 	}else if(siguiente.tipo == TOK_CONSTANTE){
